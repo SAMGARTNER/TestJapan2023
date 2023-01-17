@@ -23,12 +23,12 @@ class FinalResult
                     while(!feof($document))
                         {
                             $documentLine      =  fgetcsv($document);
-                            $ammount           = !$documentLine[8] || $documentLine[8] == "0" ? 0 : floatval($documentLine[8]);
+                            $ammount           = !$documentLine[8] || $documentLine[8] == "0" || !is_numeric($documentLine[8])? 0 : floatval($documentLine[8]);
                             $bankAccountNumber = !$documentLine[6] || strlen((string)$documentLine[6]) < BANK_ACCOUNT_LENGTH ? BANK_ACCOUNT_NUMBER_MISSING_MESSAGE : intval($documentLine[6]);
-                            $branchCode        = !$documentLine[2] ? BANK_BRANCH_CODE_MISSING_MESSAGE : intval($documentLine[2]);
+                            $branchCode        = !$documentLine[2] || !is_numeric($documentLine[2])? BANK_BRANCH_CODE_MISSING_MESSAGE : intval($documentLine[2]);
                             $e2eID             = !$documentLine[10] && !$documentLine[11] ? END_TO_END_ID_MISSING_MESSAGE : $documentLine[10] . $documentLine[11];
-                            $bankName          = !$documentLine[7] ? BANK_NAME_MISSING_MESSAGE : str_replace(" ", "_", strtolower($documentLine[7]));
-                            $bankCode          = !$documentLine[0] ? BANK_CODE_MISSING_MESSAGE  : intval($documentLine[0]);
+                            $bankName          = !$documentLine[7]  || !preg_match("/[a-z]/i",strval($documentLine[7])) ? BANK_NAME_MISSING_MESSAGE : str_replace(" ", "_", strtolower($documentLine[7]));
+                            $bankCode          = !$documentLine[0] || !is_numeric($documentLine[0])? BANK_CODE_MISSING_MESSAGE  : intval($documentLine[0]);
                             $singleRecord      = [
                                                     "amount"                => [
                                                                                     "currency" => $currency,
