@@ -6,6 +6,7 @@ define("BANK_BRANCH_CODE_MISSING_MESSAGE","Bank branch code missing");
 define("END_TO_END_ID_MISSING_MESSAGE","End to end id missing");
 define("FILE_OPENING_FAILED_MESSAGE","File Opening Failed");
 define("AMMOUNT_UNITS_FACTOR",100);
+define("BANK_ACCOUNT_LENGTH",11);
 class FinalResult 
     {
     function results($filePath)
@@ -14,7 +15,6 @@ class FinalResult
             $successfulFileOpening  = false;
             if($document)
                 {
-                    $successfulFileOpening  = TRUE;
                     $documentHeader = fgetcsv($document);
                     $currency = $documentHeader[0];
                     $parserCode = $documentHeader[1];
@@ -22,9 +22,9 @@ class FinalResult
                     $records = [];
                     while(!feof($document))
                         {
-                            $documentLine      = fgetcsv($document);
+                            $documentLine      =  fgetcsv($document);
                             $ammount           = !$documentLine[8] || $documentLine[8] == "0" ? 0 : floatval($documentLine[8]);
-                            $bankAccountNumber = !$documentLine[6] ? BANK_ACCOUNT_NUMBER_MISSING_MESSAGE : intval($documentLine[6]);
+                            $bankAccountNumber = !$documentLine[6] || strlen((string)$documentLine[6]) < BANK_ACCOUNT_LENGTH ? BANK_ACCOUNT_NUMBER_MISSING_MESSAGE : intval($documentLine[6]);
                             $branchCode        = !$documentLine[2] ? BANK_BRANCH_CODE_MISSING_MESSAGE : intval($documentLine[2]);
                             $e2eID             = !$documentLine[10] && !$documentLine[11] ? END_TO_END_ID_MISSING_MESSAGE : $documentLine[10] . $documentLine[11];
                             $bankName          = !$documentLine[7] ? BANK_NAME_MISSING_MESSAGE : str_replace(" ", "_", strtolower($documentLine[7]));
