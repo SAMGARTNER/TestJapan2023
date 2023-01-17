@@ -36,7 +36,6 @@ final class FinalResultTest extends TestCase
     {
         $aFinalResult = new FinalResult();
         $results = $aFinalResult->results('/Users/samir/Sites/Hivelocity_Japan/tests/support/data_sample.csv');
-        unset($results["document"]); 
         $this->assertEquals($results, $this->expected_return);
     }
 }
